@@ -16,7 +16,7 @@ public class Main {
         Thread thread = new Thread(() ->{
            while(true){
                try {
-                   TimeUnit.SECONDS.sleep(1);
+                   TimeUnit.MILLISECONDS.sleep(50);
                } catch (InterruptedException e) {
                    e.printStackTrace();
                }

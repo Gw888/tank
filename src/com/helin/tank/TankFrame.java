@@ -44,8 +44,6 @@ public class TankFrame extends Frame {
     @Override
     public void paint(Graphics g) {
         g.fillRect(x, y, 50, 50);
-        x += 50;
-        y += 50;
     }
 
 
@@ -75,6 +73,22 @@ public class TankFrame extends Frame {
         @Override
         public void keyPressed(KeyEvent e) {
             System.out.println("keyPressed:" + e.paramString());
+            switch(e.getKeyCode()){
+                case 37://向左移动
+                    x -= 50;
+                    break;
+                case 38://向上移动
+                    y -= 50;
+                    break;
+                case 39://向右移动
+                    x += 50;
+                    break;
+                case 40://向下移动
+                    y += 50;
+                    break;
+                default:
+                    break;
+            }
         }
 
         /**
