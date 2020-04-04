@@ -5,102 +5,149 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author 何林
  * @version V1.0
  * @Package com.helin.tank
- * @date 2020/4/4 6:55
+ * @date 2020/4/4 19:59
  * @Copyright © 新点软件股份有限公司
  */
 public class TankFrame extends Frame {
 
-    private int x = 200;
-    private int y = 200;
+    public static final int GAME_WIDTH = 800;
+    public static final int GAME_HEIGHT = 800;
+    private static Dir dir = Dir.DD;
+    private Tank myTank = new Tank(50, 50, Dir.DD,this);
+//    private Bullet b = new Bullet(50,50,Dir.DD);
+    private List<Bullet> bullets = new ArrayList<>();
 
     public TankFrame() throws HeadlessException {
-        this.setTitle("坦克大战");
-        this.setName("tank war");
-        this.setSize(800, 800);
-        this.setEnabled(true);
         this.setVisible(true);
         this.setResizable(false);
-        //添加桌面监听事件
+        this.setTitle("tank war");
+        this.setName("tank war");
+        this.setSize(800, 800);
         this.addWindowListener(new WindowAdapter() {
-            /**
-             * 点击关闭按钮时退出程序
-             * @param e
-             */
             @Override
             public void windowClosing(WindowEvent e) {
                 System.exit(0);
             }
         });
-        //添加按钮监听事件
+
         this.addKeyListener(new DefaultKeyListener());
 
     }
 
+    Image offScreenImage = null;
     @Override
-    public void paint(Graphics g) {
-        g.fillRect(x, y, 50, 50);
+    public void update(Graphics g){
+        if(offScreenImage == null){
+            offScreenImage = this.createImage(GAME_WIDTH,GAME_HEIGHT);
+        }
+        Graphics gOffScreen = offScreenImage.getGraphics();
+        Color c = gOffScreen.getColor();
+        gOffScreen.setColor(Color.BLACK);
+        gOffScreen.fillRect(0,0,GAME_WIDTH,GAME_HEIGHT);
+        gOffScreen.setColor(c);
+        paint(gOffScreen);
+        g.drawImage(offScreenImage,0,0,null);
     }
 
+    @Override
+    public void paint(Graphics g) {
+        Color c = g.getColor();
+        g.setColor(Color.RED);
+        g.drawString("发出子弹数量：" + bullets.size(),10,60);
+        g.setColor(c);
 
-    //默认的按钮监听事件
+        myTank.paint(g);
+        for(int i = 0; i < bullets.size(); i++){
+            bullets.get(i).paint(g);
+        }
+    }
+
     private class DefaultKeyListener implements KeyListener {
 
+        private Boolean DU = false;
+        private Boolean DR = false;
+        private Boolean DD = false;
+        private Boolean DL = false;
 
-        /**
-         * Invoked when a key has been typed.
-         * See the class description for {@link KeyEvent} for a definition of
-         * a key typed event.
-         *
-         * @param e
-         */
         @Override
         public void keyTyped(KeyEvent e) {
-            System.out.println("keyTyped:" + e.paramString());
+            System.out.println("keyTyped : " + e.paramString());
         }
 
-        /**
-         * Invoked when a key has been pressed.
-         * See the class description for {@link KeyEvent} for a definition of
-         * a key pressed event.
-         *
-         * @param e
-         */
         @Override
         public void keyPressed(KeyEvent e) {
-            System.out.println("keyPressed:" + e.paramString());
-            switch(e.getKeyCode()){
-                case 37://向左移动
-                    x -= 50;
+            System.out.println("keyPressed : " + e.paramString());
+            switch (e.getKeyCode()) {
+                case KeyEvent.VK_LEFT:
+                    DL = true;
                     break;
-                case 38://向上移动
-                    y -= 50;
+                case KeyEvent.VK_DOWN:
+                    DD = true;
                     break;
-                case 39://向右移动
-                    x += 50;
+                case KeyEvent.VK_RIGHT:
+                    DR = true;
                     break;
-                case 40://向下移动
-                    y += 50;
+                case KeyEvent.VK_UP:
+                    DU = true;
                     break;
                 default:
                     break;
+
             }
+
+            defaultSwitch();
+
         }
 
-        /**
-         * Invoked when a key has been released.
-         * See the class description for {@link KeyEvent} for a definition of
-         * a key released event.
-         *
-         * @param e
-         */
         @Override
         public void keyReleased(KeyEvent e) {
-            System.out.println("keyReleased:" + e.paramString());
+            System.out.println("keyReleased : " + e.paramString());
+            switch (e.getKeyCode()) {
+                case KeyEvent.VK_LEFT:
+                    DL = false;
+                    break;
+                case KeyEvent.VK_DOWN:
+                    DD = false;
+                    break;
+                case KeyEvent.VK_RIGHT:
+                    DR = false;
+                    break;
+                case KeyEvent.VK_UP:
+                    DU = false;
+                    break;
+                case KeyEvent.VK_CONTROL:
+                    myTank.fire();
+                    break;
+                default:
+                    break;
+
+            }
+            defaultSwitch();
+        }
+
+        private void defaultSwitch() {
+            myTank.setIsmoving(true);
+            if (DL) myTank.setDir(Dir.DL);
+            if (DU) myTank.setDir(Dir.DU);
+            if (DR) myTank.setDir(Dir.DR);
+            if (DD) myTank.setDir(Dir.DD);
+            if(!DL && !DU && !DR && !DD) myTank.setIsmoving(false);
         }
     }
+
+    public void addBullet(Bullet bullet) {
+        this.bullets.add(bullet);
+    }
+
+    public List<Bullet> getBullets(){
+        return this.bullets;
+    }
+
 }
