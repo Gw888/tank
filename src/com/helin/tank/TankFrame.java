@@ -20,10 +20,17 @@ public class TankFrame extends Frame {
     public static final int GAME_WIDTH = 800;
     public static final int GAME_HEIGHT = 800;
     private static Dir dir = Dir.DD;
-    private Tank myTank = new Tank(50, 50, Dir.DD,this);
-//    private Bullet b = new Bullet(50,50,Dir.DD);
+    public List<Tank> tanks = new ArrayList<>();
+    Image offScreenImage = null;
+    private Tank myTank = new Tank(300, 400, Dir.DU, Group.GOOD, this);
+    //    private Bullet b = new Bullet(50,50,Dir.DD);
     private List<Bullet> bullets = new ArrayList<>();
-    //private List<Tank> tanks = new ArrayList<>();
+
+    public List<Exploded> explodeds = new ArrayList<>();
+
+//    {
+//        tanks.add(myTank);
+//    }
 
     public TankFrame() throws HeadlessException {
         this.setVisible(true);
@@ -42,32 +49,49 @@ public class TankFrame extends Frame {
 
     }
 
-    Image offScreenImage = null;
     @Override
-    public void update(Graphics g){
-        if(offScreenImage == null){
-            offScreenImage = this.createImage(GAME_WIDTH,GAME_HEIGHT);
+    public void update(Graphics g) {
+        if (offScreenImage == null) {
+            offScreenImage = this.createImage(GAME_WIDTH, GAME_HEIGHT);
         }
         Graphics gOffScreen = offScreenImage.getGraphics();
         Color c = gOffScreen.getColor();
         gOffScreen.setColor(Color.BLACK);
-        gOffScreen.fillRect(0,0,GAME_WIDTH,GAME_HEIGHT);
+        gOffScreen.fillRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
         gOffScreen.setColor(c);
         paint(gOffScreen);
-        g.drawImage(offScreenImage,0,0,null);
+        g.drawImage(offScreenImage, 0, 0, null);
     }
 
     @Override
     public void paint(Graphics g) {
         Color c = g.getColor();
         g.setColor(Color.RED);
-        g.drawString("发出子弹数量：" + bullets.size(),10,60);
+        g.drawString("发出子弹数量：" + bullets.size(), 10, 60);
+        g.drawString("敌人数量：" + tanks.size(), 10, 120);
+        g.drawString("爆炸数量：" + explodeds.size(), 10, 150);
         g.setColor(c);
-
         myTank.paint(g);
-        for(int i = 0; i < bullets.size(); i++){
+        for (int i = 0; i < bullets.size(); i++) {
             bullets.get(i).paint(g);
         }
+
+        for (int i = 0; i < tanks.size(); i++) {
+            tanks.get(i).paint(g);
+        }
+
+        for(int i = 0; i < explodeds.size(); i++) {
+            explodeds.get(i).paint(g);
+        }
+
+    }
+
+    public void addBullet(Bullet bullet) {
+        this.bullets.add(bullet);
+    }
+
+    public List<Bullet> getBullets() {
+        return this.bullets;
     }
 
     private class DefaultKeyListener implements KeyListener {
@@ -128,7 +152,6 @@ public class TankFrame extends Frame {
                     break;
                 default:
                     break;
-
             }
             defaultSwitch();
         }
@@ -139,16 +162,8 @@ public class TankFrame extends Frame {
             if (DU) myTank.setDir(Dir.DU);
             if (DR) myTank.setDir(Dir.DR);
             if (DD) myTank.setDir(Dir.DD);
-            if(!DL && !DU && !DR && !DD) myTank.setIsmoving(false);
+            if (!DL && !DU && !DR && !DD) myTank.setIsmoving(false);
         }
-    }
-
-    public void addBullet(Bullet bullet) {
-        this.bullets.add(bullet);
-    }
-
-    public List<Bullet> getBullets(){
-        return this.bullets;
     }
 
 }
