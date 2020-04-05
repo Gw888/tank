@@ -12,20 +12,42 @@ import java.awt.image.BufferedImage;
  */
 public class ResourceMgr {
 
-    public static BufferedImage TANK_L,TANK_U,TANK_R,TANK_D;
-    public static BufferedImage BULLET_L,BULLET_U,BULLET_R,BULLET_D;
+    public static BufferedImage GOOD_RED_TANK_L, GOOD_RED_TANK_U, GOOD_RED_TANK_R, GOOD_RED_TANK_D;
+    public static BufferedImage GOOD_BLUE_TANK_L, GOOD_BLUE_TANK_U, GOOD_BLUE_TANK_R, GOOD_BLUE_TANK_D;
+    public static BufferedImage BAD_RED_TANK_L, BAD_RED_TANK_U, BAD_RED_TANK_R, BAD_RED_TANK_D;
+    public static BufferedImage BAD_BLUE_TANK_L, BAD_BLUE_TANK_U, BAD_BLUE_TANK_R, BAD_BLUE_TANK_D;
 
-    static{
+    public static BufferedImage BULLET_L, BULLET_U, BULLET_R, BULLET_D;
+    public static BufferedImage[] EXPLOED = new BufferedImage[16];
+
+    static {
         try {
-            TANK_L = ImageIO.read(ResourceMgr.class.getClassLoader().getResourceAsStream("images/tankL.gif"));
-            TANK_U = ImageIO.read(ResourceMgr.class.getClassLoader().getResourceAsStream("images/tankU.gif"));
-            TANK_R = ImageIO.read(ResourceMgr.class.getClassLoader().getResourceAsStream("images/tankR.gif"));
-            TANK_D = ImageIO.read(ResourceMgr.class.getClassLoader().getResourceAsStream("images/tankD.gif"));
-            BULLET_L = ImageIO.read(ResourceMgr.class.getClassLoader().getResourceAsStream("images/bulletL.gif"));
-            BULLET_U = ImageIO.read(ResourceMgr.class.getClassLoader().getResourceAsStream("images/bulletU.gif"));
-            BULLET_R = ImageIO.read(ResourceMgr.class.getClassLoader().getResourceAsStream("images/bulletR.gif"));
-            BULLET_D = ImageIO.read(ResourceMgr.class.getClassLoader().getResourceAsStream("images/bulletD.gif"));
-        }catch (Exception e){
+            GOOD_RED_TANK_U = ImageIO.read(ResourceMgr.class.getClassLoader().getResourceAsStream("images/GoodTank1.png"));
+            GOOD_RED_TANK_R = ImageUtil.rotateImage(GOOD_RED_TANK_U,90);
+            GOOD_RED_TANK_D = ImageUtil.rotateImage(GOOD_RED_TANK_U,180);
+            GOOD_RED_TANK_L = ImageUtil.rotateImage(GOOD_RED_TANK_U,270);
+            GOOD_BLUE_TANK_U = ImageIO.read(ResourceMgr.class.getClassLoader().getResourceAsStream("images/GoodTank2.png"));
+            GOOD_BLUE_TANK_R = ImageUtil.rotateImage(GOOD_BLUE_TANK_U,90);
+            GOOD_BLUE_TANK_D = ImageUtil.rotateImage(GOOD_BLUE_TANK_U,180);
+            GOOD_BLUE_TANK_L = ImageUtil.rotateImage(GOOD_BLUE_TANK_U,270);
+            BAD_RED_TANK_U = ImageIO.read(ResourceMgr.class.getClassLoader().getResourceAsStream("images/BadTank1.png"));
+            BAD_RED_TANK_R = ImageUtil.rotateImage(BAD_RED_TANK_U,90);
+            BAD_RED_TANK_D = ImageUtil.rotateImage(BAD_RED_TANK_U,180);
+            BAD_RED_TANK_L = ImageUtil.rotateImage(BAD_RED_TANK_U,270);
+            BAD_BLUE_TANK_U = ImageIO.read(ResourceMgr.class.getClassLoader().getResourceAsStream("images/BadTank2.png"));
+            BAD_BLUE_TANK_R = ImageUtil.rotateImage(BAD_BLUE_TANK_U,90);
+            BAD_BLUE_TANK_D = ImageUtil.rotateImage(BAD_BLUE_TANK_U,180);
+            BAD_BLUE_TANK_L = ImageUtil.rotateImage(BAD_BLUE_TANK_U,270);
+
+
+            BULLET_U = ImageIO.read(ResourceMgr.class.getClassLoader().getResourceAsStream("images/bulletU.png"));
+            BULLET_R = ImageUtil.rotateImage(BULLET_U,90);
+            BULLET_D = ImageUtil.rotateImage(BULLET_U,180);
+            BULLET_L = ImageUtil.rotateImage(BULLET_U,270);
+            for (int i = 0; i < 16; i++) {
+                EXPLOED[i] = ImageIO.read(ResourceMgr.class.getClassLoader().getResourceAsStream("images/e" + (i+1) + ".gif"));
+            }
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

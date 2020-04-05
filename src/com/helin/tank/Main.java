@@ -1,5 +1,8 @@
 package com.helin.tank;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author 何林
  * @version V1.0
@@ -11,7 +14,10 @@ public class Main {
 
     public static void main(String[] args) {
         TankFrame tankFrame = new TankFrame();
-
+        for(int i = 0;i< 10;i++){
+            tankFrame.tanks.add(new Tank((i + 1) * 50,200,Dir.DD,Group.BAD,tankFrame));
+        }
+        new Thread(()->new Audio("audio/war1.wav").play()).start();
         Thread thread = new Thread(() -> {
             while(true) {
                 try {

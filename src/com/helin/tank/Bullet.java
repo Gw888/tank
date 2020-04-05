@@ -14,9 +14,9 @@ import static com.helin.tank.TankFrame.GAME_WIDTH;
  */
 public class Bullet {
 
-    private static final int WEIGHT = 10;
-    private static final int HIGHT = 10;
-    private int speed = 10;
+    public static final int WIDTH = ResourceMgr.BULLET_D.getWidth();
+    public static final int HEIGHT = ResourceMgr.BULLET_D.getHeight();
+    private static final int speed = 10;
 
     private int x, y;
 
@@ -24,35 +24,40 @@ public class Bullet {
 
     private TankFrame tf = null;
 
-    private boolean live = true;
+    private boolean living = true;
 
-    public Bullet(int x, int y, Dir dir, TankFrame tf) {
-        this.x = x + Tank.WEIGHT / 2;
-        this.y = y + Tank.HIGHT / 2;
+    private Group group = null;
+
+    private Rectangle rect = new Rectangle(this.x, this.y, WIDTH, HEIGHT);
+
+    public Bullet(int x, int y, Dir dir, Group group, TankFrame tf) {
+        this.x = x;
+        this.y = y;
         this.dir = dir;
+        this.group = group;
         this.tf = tf;
+        new Thread(()->new Audio("audio/tank_fire.wav").play()).start();
     }
 
     public void paint(Graphics g) {
-        switch(dir){
+        if (!living) {
+            tf.getBullets().remove(this);
+        }
+        switch (dir) {
             case DL:
-                g.drawImage(ResourceMgr.BULLET_L,x,y,null);
+                g.drawImage(ResourceMgr.BULLET_L, x, y, null);
                 break;
             case DU:
-                g.drawImage(ResourceMgr.BULLET_U,x,y,null);
+                g.drawImage(ResourceMgr.BULLET_U, x, y, null);
                 break;
             case DR:
-                g.drawImage(ResourceMgr.BULLET_R,x,y,null);
+                g.drawImage(ResourceMgr.BULLET_R, x, y, null);
                 break;
             case DD:
-                g.drawImage(ResourceMgr.BULLET_D,x,y,null);
+                g.drawImage(ResourceMgr.BULLET_D, x, y, null);
                 break;
         }
         this.move(g);
-        if (!live) {
-            tf.getBullets().remove(this);
-        }
-
     }
 
     private void move(Graphics g) {
@@ -73,8 +78,40 @@ public class Bullet {
                 break;
         }
         if (x < 0 || y < 0 || x > GAME_WIDTH || y > GAME_HEIGHT) {
-            live = false;
+            living = false;
         }
+
+        //检测是否撞到坦克而且不是自己的坦克
+        for (int i = 0; i < tf.tanks.size(); i++) {
+            this.collideWith(tf.tanks.get(i));
+        }
+
+        rect.setRect(this.x,this.y,WIDTH,HEIGHT);
     }
 
+    private void die() {
+        living = false;
+    }
+
+    /**
+     * 如何检测呢 两个方块相交
+     *
+     * @param tank
+     * @return
+     */
+    public void collideWith(Tank tank) {
+        if(this.group.equals(tank.getGroup())) {
+            return;
+        }
+        Rectangle rectBullet = new Rectangle(this.x, this.y, WIDTH, HEIGHT);
+        Rectangle rectTank = new Rectangle(tank.getX(), tank.getY(), Tank.WIDTH, Tank.HEIGHT);
+        if (this.rect.intersects(tank.getRect())) {
+            this.die();
+            tank.die();
+            int dX = tank.getX() + Tank.WIDTH / 2 - Exploded.WIDTH/2;
+            int dY = tank.getY() + Tank.HEIGHT / 2 - Exploded.HEIGHT/2;
+            tf.explodeds.add(new Exploded(dX,dY,tf));
+        }
+
+    }
 }

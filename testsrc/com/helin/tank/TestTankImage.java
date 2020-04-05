@@ -49,5 +49,14 @@ public class TestTankImage {
         }
     }
 
+    @Test
+    public void test5(){
+        int i = 10 + 50/2 + 10/2;
+        System.out.println("i : "+i);
+        int j = (10 - 50)>>1;
+        System.out.println("j : "+j);
+        int y = 10 + 50>>>1 + 10>>>1;
+        System.out.println("y : "+y);
+    }
 
 }
