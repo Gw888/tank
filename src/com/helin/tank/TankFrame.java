@@ -23,6 +23,7 @@ public class TankFrame extends Frame {
     private Tank myTank = new Tank(50, 50, Dir.DD,this);
 //    private Bullet b = new Bullet(50,50,Dir.DD);
     private List<Bullet> bullets = new ArrayList<>();
+    //private List<Tank> tanks = new ArrayList<>();
 
     public TankFrame() throws HeadlessException {
         this.setVisible(true);
@@ -122,7 +123,7 @@ public class TankFrame extends Frame {
                 case KeyEvent.VK_UP:
                     DU = false;
                     break;
-                case KeyEvent.VK_CONTROL:
+                case KeyEvent.VK_SPACE:
                     myTank.fire();
                     break;
                 default:

@@ -36,14 +36,24 @@ public class Tank {
     }
 
     public void paint(Graphics g) {
-        Color c = g.getColor();
-        g.setColor(Color.YELLOW);
+        switch(dir){
+            case DL:
+                g.drawImage(ResourceMgr.TANK_L,x,y,null);
+                break;
+            case DU:
+                g.drawImage(ResourceMgr.TANK_U,x,y,null);
+                break;
+            case DR:
+                g.drawImage(ResourceMgr.TANK_R,x,y,null);
+                break;
+            case DD:
+                g.drawImage(ResourceMgr.TANK_D,x,y,null);
+                break;
+        }
         this.move(g);
-        g.setColor(c);
     }
 
     private void move(Graphics g) {
-        g.fillRect(x, y, 50, 50);
         if (!ismoving) return;
         switch (dir) {
             case DL:

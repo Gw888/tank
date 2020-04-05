@@ -16,7 +16,7 @@ public class Bullet {
 
     private static final int WEIGHT = 10;
     private static final int HIGHT = 10;
-    private int speed = 1;
+    private int speed = 10;
 
     private int x, y;
 
@@ -26,16 +26,36 @@ public class Bullet {
 
     private boolean live = true;
 
-    public Bullet(int x, int y, Dir dir,TankFrame tf) {
-        this.x = x + Tank.WEIGHT/2;
-        this.y = y + Tank.HIGHT/2;
+    public Bullet(int x, int y, Dir dir, TankFrame tf) {
+        this.x = x + Tank.WEIGHT / 2;
+        this.y = y + Tank.HIGHT / 2;
         this.dir = dir;
         this.tf = tf;
     }
 
-    private void move(Graphics g) {
+    public void paint(Graphics g) {
+        switch(dir){
+            case DL:
+                g.drawImage(ResourceMgr.BULLET_L,x,y,null);
+                break;
+            case DU:
+                g.drawImage(ResourceMgr.BULLET_U,x,y,null);
+                break;
+            case DR:
+                g.drawImage(ResourceMgr.BULLET_R,x,y,null);
+                break;
+            case DD:
+                g.drawImage(ResourceMgr.BULLET_D,x,y,null);
+                break;
+        }
+        this.move(g);
+        if (!live) {
+            tf.getBullets().remove(this);
+        }
 
-        g.fillRect(x, y, WEIGHT, HIGHT);
+    }
+
+    private void move(Graphics g) {
         switch (dir) {
             case DL:
                 x -= speed;
@@ -52,20 +72,9 @@ public class Bullet {
             default:
                 break;
         }
-        if(x < 0 || y < 0 || x > GAME_WIDTH || y > GAME_HEIGHT){
+        if (x < 0 || y < 0 || x > GAME_WIDTH || y > GAME_HEIGHT) {
             live = false;
         }
-    }
-
-    public void paint(Graphics g) {
-        Color c = g.getColor();
-        g.setColor(Color.RED);
-        this.move(g);
-        g.setColor(c);
-        if(!live){
-            tf.getBullets().remove(this);
-        }
-
     }
 
 }
