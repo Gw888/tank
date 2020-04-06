@@ -8,33 +8,38 @@ import static com.helin.tank.TankFrame.GAME_HEIGHT;
 import static com.helin.tank.TankFrame.GAME_WIDTH;
 
 /**
+ * 第二代跟踪坦克，子弹自带自螺旋
  * @author 何林
  * @version V1.0
  * @Package com.helin.tank
  * @date 2020/4/4 21:39
  * @Copyright © 新点软件股份有限公司
  */
-public class Tank extends BaseGun {
+public class LevelTwoTank extends BaseGun {
 
     public static final int WIDTH = ResourceMgr.BAD_RED_TANK_U.getWidth();
     public static final int HEIGHT = ResourceMgr.BAD_RED_TANK_U.getHeight();
-    private int speed = 8;
+    private int speed = 2;
     private int x, y;
     private Dir dir;
     private boolean ismoving = true;
     private TankFrame tf;
+    private boolean living = true;
     private Group group = null;
     private Random random = new Random();
+    private Exploded exploded = null;
     private Rectangle rect = new Rectangle(this.x, this.y, WIDTH, HEIGHT);
     private int breathe = 0;
+    private BaseGun gun;//主战坦克，用户自己
 
-    public Tank(int x, int y, Dir dir, Group group, TankFrame tf) {
+    public LevelTwoTank(int x, int y, Dir dir, Group group, TankFrame tf,BaseGun gun) {
         super(x,y,dir,group,tf);
         this.x = x;
         this.y = y;
         this.dir = dir;
         this.group = group;
         this.tf = tf;
+        this.gun = gun;
         if (group.equals(Group.GOOD)) {
             ismoving = false;
             speed = 10;
@@ -71,6 +76,10 @@ public class Tank extends BaseGun {
         this.move(g);
     }
 
+    /**
+     * 移动方向有8个 （同时按下上键和左键对事件监听测试）
+     * @param g
+     */
     @Override
     public void move(Graphics g) {
         if (!ismoving) return;
@@ -91,12 +100,12 @@ public class Tank extends BaseGun {
                 break;
         }
         //敌人坦克随机方向
-        if (random.nextInt(100) > 95) {//不一定每次画 都需要开火
+        if (random.nextInt(100) > 95) {
             if (this.group.equals(Group.BAD)) {
                 this.fire(new DefaultOneFireStartegy());//敌方坦克策略模式
             }
         }
-        randomDir();
+        randomDir();//跟踪坦克 不是随机方向了
         rect.setRect(this.x, this.y, WIDTH, HEIGHT);
 
     }
@@ -106,6 +115,21 @@ public class Tank extends BaseGun {
         if (this.group.equals(Group.GOOD)) {
             return;
         }
+        if(this.group.equals(gun.getGroup())){//如果是用户自己 由用户自己控制
+            return;
+        }
+        int gunDX = gun.getX();
+        int gunDY = gun.getY();
+        //跟踪弹 直接根据当前主战坦克查询坐标 偏移
+        //计算方向
+        int dX = this.x;
+        int dY = this.y;
+        //先计算角度
+
+        //分别计算物体对应在X和Y方向上的偏移量
+
+
+
         if (this.x < 0) {
             this.x = 0;
         }
@@ -134,6 +158,10 @@ public class Tank extends BaseGun {
 
     public void fire(FireStartegy fs) {
         fs.fire(this);
+    }
+
+    public void die() {
+        living = false;
     }
 
     public int getX() {

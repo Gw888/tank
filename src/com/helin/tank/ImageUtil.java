@@ -24,17 +24,17 @@ public class ImageUtil {
 
     public static BufferedImage getBufferedImageByGroupAndBreathe(Group group, int breathe) {
         breathe++;
-        if (breathe > 10) {
+        if (breathe > 100) {
             breathe = 0;
         }
         if (group.equals(Group.GOOD)) {
-            if (breathe % 2 == 0) {
+            if (breathe % 50 == 0) {
                 return ResourceMgr.GOOD_BLUE_TANK_U;
             } else {
                 return ResourceMgr.GOOD_RED_TANK_U;
             }
         } else {
-            if (breathe % 2 == 0) {
+            if (breathe % 50 == 0) {
                 return ResourceMgr.BAD_BLUE_TANK_U;
             } else {
                 return ResourceMgr.BAD_RED_TANK_U;

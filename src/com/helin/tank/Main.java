@@ -1,5 +1,9 @@
 package com.helin.tank;
 
+import com.helin.tank.factory.LevelTwoTankFactory;
+import com.helin.tank.factory.TankAbstractFactory;
+import com.helin.tank.factory.TankFactory;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,9 +17,12 @@ import java.util.List;
 public class Main {
 
     public static void main(String[] args) {
-        TankFrame tankFrame = new TankFrame();
+        TankFrame tankFrame = TankFrame.getInstance();
+        TankAbstractFactory tankfactory = new LevelTwoTankFactory();
         for(int i = 0;i< 10;i++){
-            tankFrame.tanks.add(new Tank((i + 1) * 50,200,Dir.DD,Group.BAD,tankFrame));
+            BaseGun tank = tankfactory.createGun();
+            tank.setX((i + 1) * 50);
+            tankFrame.tanks.add(tank);
         }
         new Thread(()->new Audio("audio/war1.wav").play()).start();
         Thread thread = new Thread(() -> {

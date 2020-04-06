@@ -36,6 +36,7 @@ public class Bullet {
         this.dir = dir;
         this.group = group;
         this.tf = tf;
+        tf.addBullet(this);
         new Thread(()->new Audio("audio/tank_fire.wav").play()).start();
     }
 
@@ -96,22 +97,90 @@ public class Bullet {
     /**
      * 如何检测呢 两个方块相交
      *
-     * @param tank
+     * @param baseGun
      * @return
      */
-    public void collideWith(Tank tank) {
-        if(this.group.equals(tank.getGroup())) {
+    public void collideWith(BaseGun baseGun) {
+        if(this.group.equals(baseGun.getGroup())) {
             return;
         }
         Rectangle rectBullet = new Rectangle(this.x, this.y, WIDTH, HEIGHT);
-        Rectangle rectTank = new Rectangle(tank.getX(), tank.getY(), Tank.WIDTH, Tank.HEIGHT);
-        if (this.rect.intersects(tank.getRect())) {
+        Rectangle rectTank = new Rectangle(baseGun.getX(), baseGun.getY(), Tank.WIDTH, Tank.HEIGHT);
+        if (this.rect.intersects(baseGun.getRect())) {
             this.die();
-            tank.die();
-            int dX = tank.getX() + Tank.WIDTH / 2 - Exploded.WIDTH/2;
-            int dY = tank.getY() + Tank.HEIGHT / 2 - Exploded.HEIGHT/2;
+            baseGun.die();
+            int dX = baseGun.getX() + Tank.WIDTH / 2 - Exploded.WIDTH/2;
+            int dY = baseGun.getY() + Tank.HEIGHT / 2 - Exploded.HEIGHT/2;
             tf.explodeds.add(new Exploded(dX,dY,tf));
         }
 
+    }
+
+    public static int getWIDTH() {
+        return WIDTH;
+    }
+
+    public static int getHEIGHT() {
+        return HEIGHT;
+    }
+
+    public static int getSpeed() {
+        return speed;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
+
+    public Dir getDir() {
+        return dir;
+    }
+
+    public void setDir(Dir dir) {
+        this.dir = dir;
+    }
+
+    public TankFrame getTf() {
+        return tf;
+    }
+
+    public void setTf(TankFrame tf) {
+        this.tf = tf;
+    }
+
+    public boolean isLiving() {
+        return living;
+    }
+
+    public void setLiving(boolean living) {
+        this.living = living;
+    }
+
+    public Group getGroup() {
+        return group;
+    }
+
+    public void setGroup(Group group) {
+        this.group = group;
+    }
+
+    public Rectangle getRect() {
+        return rect;
+    }
+
+    public void setRect(Rectangle rect) {
+        this.rect = rect;
     }
 }

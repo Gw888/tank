@@ -20,9 +20,9 @@ public class TankFrame extends Frame {
     public static final int GAME_WIDTH = 800;
     public static final int GAME_HEIGHT = 800;
     private static Dir dir = Dir.DD;
-    public List<Tank> tanks = new ArrayList<>();
+    public List<BaseGun> tanks = new ArrayList<>();
     Image offScreenImage = null;
-    private Tank myTank = new Tank(300, 400, Dir.DU, Group.GOOD, this);
+    public Tank myTank = new Tank(300, 400, Dir.DU, Group.GOOD, this);
     //    private Bullet b = new Bullet(50,50,Dir.DD);
     private List<Bullet> bullets = new ArrayList<>();
 
@@ -32,7 +32,13 @@ public class TankFrame extends Frame {
 //        tanks.add(myTank);
 //    }
 
-    public TankFrame() throws HeadlessException {
+    private final static TankFrame TANK_FRAME = new TankFrame();
+
+    public static TankFrame getInstance(){
+        return TANK_FRAME;
+    }
+
+    private TankFrame() throws HeadlessException {
         this.setVisible(true);
         this.setResizable(false);
         this.setTitle("tank war");
@@ -148,7 +154,7 @@ public class TankFrame extends Frame {
                     DU = false;
                     break;
                 case KeyEvent.VK_SPACE:
-                    myTank.fire();
+                    myTank.fire(new AllDirFireStartegy());//我方坦克的策略模式 使用第二种策略模式
                     break;
                 default:
                     break;
